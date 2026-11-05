@@ -1,0 +1,14 @@
+{
+  "name": "归处 · 空间记忆管家",
+  "short_name": "归处",
+  "description": "本地优先的找物与收纳管理应用",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0c0e13",
+  "theme_color": "#2e6bf0",
+  "icons": [
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

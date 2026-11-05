@@ -1,0 +1,131 @@
+<view class="page">
+  <view class="row" style="justify-content: space-between">
+    <view>
+      <view class="h1">{{title}} <text class="chip c-blue">{{kindLabel}}</text></view>
+      <view class="sub">📍 {{path}}</view>
+    </view>
+    <view class="btn btn-sm" bindtap="onEditC">编辑</view>
+  </view>
+
+  <!-- 库存视图 -->
+  <block wx:if="{{kind === 'stock'}}">
+    <view class="card" wx:for="{{rows}}" wx:key="id" wx:if="{{!item.discarded}}">
+      <view class="row">
+        <view class="grow" bindtap="onExpand" data-item="{{item.id}}">
+          <view class="iname">{{item.name}}</view>
+          <view class="chiprow"><view class="chip {{c.cls}}" wx:for="{{item.chips}}" wx:for-item="c" wx:key="t">{{c.t}}</view></view>
+        </view>
+        <view class="stepper">
+          <view class="stepper-btn" bindtap="onQty" data-d="-1" data-item="{{item.id}}">−</view>
+          <view class="stepper-val">{{item.qty}}</view>
+          <view class="stepper-btn" bindtap="onQty" data-d="1" data-item="{{item.id}}">＋</view>
+        </view>
+      </view>
+      <view class="barline" wx:if="{{item.expiry}}">
+        <view class="track"><view class="fill" style="width: {{item.expiryPct}}%; background: {{item.expiryCol}}"></view></view>
+        <view class="sub">{{item.expiryText}}</view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 打卡视图 -->
+  <block wx:if="{{kind === 'checklist'}}">
+    <view class="card">
+      <view class="ckrow {{item.done ? 'ckdone' : ''}}" wx:for="{{rows}}" wx:key="id" bindtap="onToggleDone" data-item="{{item.id}}">
+        <view class="ckdot {{item.done ? 'ckon' : ''}}">{{item.done ? '✓' : ''}}</view>
+        <view>{{item.name}}</view>
+      </view>
+      <view class="rowbtns">
+        <view class="btn btn-primary" style="flex: 1" bindtap="onOutOk">✓ 出门确认</view>
+        <view class="btn" bindtap="onOutHome">↺ 回家复位</view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 档案视图 -->
+  <block wx:if="{{kind === 'archive'}}">
+    <view class="card">
+      <view class="rrow" wx:for="{{rows}}" wx:key="id" bindtap="onExpand" data-item="{{item.id}}">
+        <view class="ricon">{{item.owner === '私有' ? '🔒' : '📁'}}</view>
+        <view class="rmain"><view class="t">{{item.name}} <text class="chip c-red" wx:if="{{item.secret}}">保密</text></view></view>
+        <view class="chev">▾</view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 趣味视图 -->
+  <block wx:if="{{kind === 'kids'}}">
+    <view class="kidgrid">
+      <view class="kid" wx:for="{{rows}}" wx:key="id" bindtap="onExpand" data-item="{{item.id}}">
+        <view style="font-size: 52rpx">{{item.emoji || '🧸'}}</view>
+        <view style="font-weight: 600">{{item.name}}</view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 普通列表 -->
+  <block wx:if="{{kind === 'default'}}">
+    <view class="card" wx:for="{{rows}}" wx:key="id">
+      <view class="row">
+        <image class="thumb" wx:if="{{item.photo}}" src="{{item.photo}}" />
+        <view class="grow" bindtap="onExpand" data-item="{{item.id}}">
+          <view class="iname">{{item.name}}</view>
+          <view class="chiprow"><view class="chip {{c.cls}}" wx:for="{{item.chips}}" wx:for-item="c" wx:key="t">{{c.t}}</view></view>
+        </view>
+        <view class="chev" bindtap="onExpand" data-item="{{item.id}}">▾</view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 展开详情（通用，跟随 expanded） -->
+  <block wx:if="{{expanded}}">
+    <view class="card" wx:for="{{rows}}" wx:key="id" wx:if="{{item.id === expanded && item.detail}}">
+      <image class="f-preview" wx:if="{{item.photo}}" src="{{item.photo}}" />
+      <view class="dpath">📍 完整路径：{{item.detail.path}}</view>
+      <view class="dpath" wx:if="{{item.detail.tags}}">🏷️ {{item.detail.tags}}</view>
+      <view class="dpath" wx:if="{{item.expiry}}">⏳ 效期剩余 {{item.expiry}} 天</view>
+      <view class="dpath" wx:if="{{item.detail.lent}}">🤝 {{item.detail.lent}}</view>
+      <view class="dpath" wx:if="{{item.detail.note}}">📝 {{item.detail.note}}</view>
+      <view class="dpath" wx:if="{{item.owner}}">👤 {{item.owner}}</view>
+      <view class="dpath" wx:if="{{item.detail.ownerName}}">🧑‍💼 录入人：{{item.detail.ownerName}}</view>
+      <view class="dpath" wx:for="{{item.detail.hist}}" wx:for-item="h" wx:key="t">🕘 {{h.text}} · {{h.t}}</view>
+      <view class="rowbtns">
+        <view class="btn btn-sm" bindtap="onForm" data-type="item-edit" data-item="{{item.id}}">编辑</view>
+        <view class="btn btn-sm" bindtap="onForm" data-type="move" data-item="{{item.id}}">移动</view>
+        <view class="btn btn-sm" bindtap="onForm" data-type="lend" data-item="{{item.id}}">外借</view>
+        <view class="btn btn-sm" bindtap="onForm" data-type="reminder" data-item="{{item.id}}">设提醒</view>
+        <view class="btn btn-sm" bindtap="onOwner" data-item="{{item.id}}">权属</view>
+        <view class="btn btn-sm btn-danger" bindtap="onDiscard" data-item="{{item.id}}">{{item.discarded ? '恢复' : '丢弃'}}</view>
+        <view class="btn btn-sm btn-danger" bindtap="onDel" data-item="{{item.id}}">删除</view>
+      </view>
+    </view>
+  </block>
+
+  <view class="empty" wx:if="{{!rows.length}}">这个收纳点还没有物品 · 点下方「拍照认物品」最快</view>
+
+  <!-- AI 识别结果 -->
+  <view class="card" wx:if="{{aiBusy}}"><view class="empty">🤖 正在识别…</view></view>
+  <block wx:if="{{aiCards.length}}">
+    <view class="h2">AI 看到的物品 · 勾选后入库</view>
+    <view class="f-label">入库位置（默认当前收纳点，可点更换）</view>
+    <picker range="{{aiLocs}}" value="{{aiLocIdx}}" bindchange="onAiLoc"><view class="picker-line">{{aiLocName}}</view></picker>
+    <view class="card" wx:for="{{aiCards}}" wx:key="name">
+      <view class="row">
+        <view class="btn btn-sm {{item.keep ? 'btn-primary' : ''}}" bindtap="onAiKeep" data-i="{{index}}">{{item.keep ? '✓' : '✕'}}</view>
+        <view class="grow">
+          <input class="input" value="{{item.name}}" bindinput="onAiName" data-i="{{index}}" />
+          <picker class="picker-line" style="margin-top: 8rpx" range="{{['电子','生活','学习','工具','药品','衣物','证件','玩具','办公','文具']}}" bindchange="onAiCat" data-i="{{index}}">
+            <view>{{item.cat}}</view>
+          </picker>
+        </view>
+      </view>
+    </view>
+    <view class="btn btn-primary btn-block" bindtap="onAiConfirm">确认入库</view>
+  </block>
+
+  <view class="rowbtns" style="margin-top: 26rpx">
+    <view class="btn btn-primary" style="flex: 1" bindtap="onAI">🤖 拍照认物品</view>
+    <view class="btn" style="flex: 1" bindtap="onAdd">＋ 手动录入</view>
+  </view>
+  <view class="note" wx:if="{{kind === 'default'}}">点击条目展开详情与操作（移动 / 外借 / 提醒 / 权属 / 丢弃）。</view>
+</view>

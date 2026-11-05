@@ -1,0 +1,27 @@
+<view class="page">
+  <swiper class="gswp" indicator-dots="{{true}}" indicator-color="rgba(120,130,150,.35)" indicator-active-color="#2e6bf0" current="{{cur}}" bindchange="onSw">
+    <swiper-item wx:for="{{slides}}" wx:key="t">
+      <view class="slide">
+        <view class="semo">{{item.emoji}}</view>
+        <view class="stt">{{item.t}}</view>
+        <view class="ssub">{{item.s}}</view>
+        <view class="srow" wx:for="{{item.points}}" wx:for-item="p" wx:key="*this">
+          <view class="sdot">•</view>
+          <view class="stx">{{p}}</view>
+        </view>
+      </view>
+    </swiper-item>
+  </swiper>
+  <view class="rowbtns" style="padding: 0 10rpx">
+    <view class="btn btn-primary btn-block" wx:if="{{cur === slides.length - 1}}" bindtap="onStart">开始使用 →</view>
+    <view class="btn btn-block" wx:else bindtap="onStart">跳过，直接开始</view>
+  </view>
+
+  <view class="h2" style="margin-top: 44rpx">📖 常用操作速查</view>
+  <view class="card" wx:for="{{help}}" wx:key="t">
+    <view class="iname">{{item.t}}</view>
+    <view class="note" style="padding-top: 8rpx">{{item.d}}</view>
+  </view>
+  <button class="btn btn-block" open-type="feedback" style="margin-top: 20rpx">📮 反馈问题或建议</button>
+  <view style="height: 30rpx"></view>
+</view>

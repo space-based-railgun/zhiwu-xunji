@@ -1,0 +1,16 @@
+<view class="lockpage">
+  <view class="lockbox {{err ? 'shake' : ''}}">
+    <view class="locklogo">🔒</view>
+    <view class="h1" style="margin: 8rpx 0 4rpx">知物寻迹已锁定</view>
+    <view class="sub">输入 PIN 解锁</view>
+    <view class="pinbox">{{pin}}</view>
+    <view class="lockerr">{{err}}</view>
+    <view class="keypad">
+      <view class="kp" wx:for="{{keys}}" wx:key="*this" bindtap="onKey" data-k="{{item}}">
+        <text wx:if="{{item !== 'del' && item !== 'ok'}}">{{item}}</text>
+        <text wx:elif="{{item === 'del'}}">⌫</text>
+        <text wx:else>✓</text>
+      </view>
+    </view>
+  </view>
+</view>

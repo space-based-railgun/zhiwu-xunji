@@ -1,0 +1,52 @@
+<view class="panopage">
+  <scroll-view scroll-x scroll-left="{{scrollLeft}}" scroll-with-animation bindscroll="onScroll" class="pano-scroll">
+    <view class="pano-track" style="width: {{trackW}}px; height: {{trackH}}px; {{hasPano ? 'background-image: url(' + panoPath + ')' : hueStyle}}" bindtap="onTrackTap">
+      <view class="pano-hint">↔ 左右滑动环视 · 点击圆点查看柜内</view>
+      <view class="hot" wx:for="{{hotspots}}" wx:key="cid" style="left: {{item.left}}px; top: {{item.top}}px" bindtap="onHot" data-cid="{{item.cid}}">
+        <view class="hot-dot">{{item.emoji}}</view>
+        <view class="hot-label">{{item.label}}</view>
+      </view>
+    </view>
+  </scroll-view>
+  <view class="placingbar" wx:if="{{placing}}">
+    <view class="grow">正在放「{{placingName}}」的圆点：点击图上位置</view>
+    <view class="btn btn-sm" bindtap="onCancelPlace">取消</view>
+  </view>
+  <view class="pano-under">
+    <view class="row" style="justify-content: space-between; margin-bottom: 16rpx">
+      <view class="btn btn-sm" bindtap="onBack">← 返回</view>
+      <view class="pano-name">{{name}}</view>
+      <view class="btn btn-sm" bindtap="onUpload">🖼️ 上传全景</view>
+    </view>
+    <view class="scrollx" style="margin-bottom: 14rpx">
+      <view class="qchip {{item.active ? 'active' : ''}}" style="display: inline-flex" wx:for="{{roomChips}}" wx:key="id" bindtap="onSwitchRoom" data-id="{{item.id}}">{{item.name}}</view>
+    </view>
+    <view class="sub" style="margin: 10rpx 4rpx">本房间收纳点</view>
+    <view class="chiprow" style="margin-bottom: 8rpx">
+      <view class="qchip" wx:for="{{cchips}}" wx:key="id" bindtap="onCChip" data-cid="{{item.id}}">{{item.name}}</view>
+    </view>
+    <view class="rowbtns">
+      <view class="btn btn-sm btn-primary" bindtap="onAICont">🤖 拍照认收纳点</view>
+      <view class="btn btn-sm" bindtap="onAddC">＋ 添加收纳点</view>
+      <view class="btn btn-sm" bindtap="onPlaceMarker">🎯 调整圆点位置</view>
+      <view class="btn btn-sm" bindtap="onStitch">📸 四面拍摄拼全景</view>
+      <view class="btn btn-sm" bindtap="onUpload">🖼️ 上传全景图</view>
+      <view class="btn btn-sm" bindtap="onEdit">✏️ 编辑房间</view>
+      <view class="btn btn-sm btn-danger" bindtap="onDel">🗑️ 删除房间</view>
+    </view>
+    <block wx:if="{{aiConts.length}}">
+      <view class="h2" style="margin-top: 20rpx">AI 建议的收纳点 · 勾选后创建</view>
+      <view class="card" wx:for="{{aiConts}}" wx:key="id">
+        <view class="row">
+          <view class="btn btn-sm {{item.keep ? 'btn-primary' : ''}}" bindtap="onAiCToggle" data-i="{{index}}">{{item.keep ? '✓' : '✕'}}</view>
+          <view class="grow"><input class="input" value="{{item.name}}" bindinput="onAiCName" data-i="{{index}}" /></view>
+          <view style="font-size: 40rpx">{{item.emoji}}</view>
+        </view>
+      </view>
+      <view class="btn btn-primary btn-block" bindtap="onAiCConfirm">创建所选收纳点</view>
+      <view class="note">创建后点「🎯 调整圆点位置」，在全景图上点一下，就能把收纳点摆到对应位置。</view>
+    </block>
+    <view class="note">没拍全景也能用（就这样记位置）。想加照片：站在房间中央，每转 90° 拍一张，用「📸 四面拍摄」自动拼成环视底图；然后点「🎯 调整圆点位置」，在图上点一下就给柜子定位。也可以直接上传 2:1 的 360° 全景照片。</view>
+  </view>
+  <canvas type="2d" id="stitch-canvas" class="stitch-canvas"></canvas>
+</view>

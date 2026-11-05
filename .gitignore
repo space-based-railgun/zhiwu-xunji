@@ -1,0 +1,9 @@
+# 本地私有配置（每台机器不同）
+project.private.config.json
+
+# 依赖与临时文件
+node_modules/
+_tmp_*.py
+*.log
+.DS_Store
+Thumbs.db

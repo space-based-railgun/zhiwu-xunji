@@ -1,0 +1,98 @@
+<include src="../common/navbar.wxml"/>
+<view class="page" style="padding-top: {{navPad}}px">
+  <view class="h1" style="margin-top: 16rpx">设置</view>
+  <view class="sub" style="margin: 4rpx 4rpx 16rpx">本地优先 · 数据不出设备</view>
+
+  <view class="card">
+    <view class="merow">
+      <view class="ricon">📖</view>
+      <view class="grow"><view class="t">新手指南</view><view class="s">产品介绍 · 怎么用 · 操作速查</view></view>
+      <view class="btn btn-sm" bindtap="onGuide">查看</view>
+    </view>
+    <view class="merow">
+      <view class="ricon">♿</view>
+      <view class="grow"><view class="t">长辈模式</view><view class="s">大字号 · 界面精简</view></view>
+      <switch checked="{{senior}}" bindchange="onSenior" color="#2e6bf0" />
+    </view>
+    <view class="merow">
+      <view class="ricon">✍️</view>
+      <view class="grow"><view class="t">连续录入</view><view class="s">保存后自动开下一条</view></view>
+      <switch checked="{{contEntry}}" bindchange="onCont" color="#2e6bf0" />
+    </view>
+    <view class="merow">
+      <view class="ricon">🔒</view>
+      <view class="grow"><view class="t">应用锁</view><view class="s">{{lockSet ? '已开启 · PIN 哈希存本机' : 'PIN 保护敏感数据'}}</view></view>
+      <view class="btn btn-sm" wx:if="{{!lockSet}}" bindtap="onLockSet">开启</view>
+      <view class="rowbtns" wx:else style="margin: 0">
+        <view class="btn btn-sm" bindtap="onLockNow">锁定</view>
+        <view class="btn btn-sm btn-danger" bindtap="onLockOff">关闭</view>
+      </view>
+    </view>
+    <view class="merow">
+      <view class="ricon">🤖</view>
+      <view class="grow"><view class="t">AI 识别</view><view class="s">{{aiSet ? '已配置 · 免费模型 glm-4v-flash' : '未配置 · 免费 · 点配置看 30 秒教程'}}</view></view>
+      <view class="btn btn-sm" bindtap="onAI">配置</view>
+    </view>
+  </view>
+
+  <view class="h2">👥 账户与成员（本机身份）</view>
+  <view class="card">
+    <view class="merow">
+      <view class="ricon">{{curUser.emoji}}</view>
+      <view class="grow"><view class="t">当前使用：{{curUser.name}}</view><view class="s">录入的物品会记在当前身份名下</view></view>
+      <view class="btn btn-sm" bindtap="onSwitch">切换</view>
+    </view>
+    <view class="merow" wx:for="{{members}}" wx:key="id">
+      <view class="ricon">
+        <image wx:if="{{item.avatar}}" class="ricon-img" src="{{item.avatar}}" />
+        <text wx:else>{{item.emoji}}</text>
+      </view>
+      <view class="grow"><view class="t">{{item.name}} <text class="chip c-gray" wx:if="{{item.role === '管理员'}}">管理员</text></view><view class="s">{{item.pin ? '🔒 已设 PIN' : '未设 PIN'}}{{item.avatar ? ' · 微信已绑定' : ''}} · 点右侧编辑/删除</view></view>
+      <view class="btn btn-sm" bindtap="onMemberEdit" data-id="{{item.id}}">编辑</view>
+    </view>
+    <view class="rowbtns" style="margin-top: 14rpx">
+      <view class="btn btn-sm btn-primary" bindtap="onMemberAdd">＋ 添加成员</view>
+    </view>
+    <view class="note">成员身份以后可绑定微信账号，实现家人共享与云同步。</view>
+  </view>
+
+  <view class="card">
+    <view class="merow">
+      <view class="ricon">📮</view>
+      <view class="grow"><view class="t">反馈问题</view><view class="s">遇到 bug 或有建议？点此反馈（可附截图）</view></view>
+      <button class="btn btn-sm" open-type="feedback">去反馈</button>
+    </view>
+    <view class="merow">
+      <view class="ricon">📧</view>
+      <view class="grow"><view class="t">邮件反馈</view><view class="s">3437199533@qq.com</view></view>
+      <view class="btn btn-sm" bindtap="onCopyMail">复制邮箱</view>
+    </view>
+  </view>
+
+  <view class="h2">💾 数据（全部存于本机）</view>
+  <view class="card">
+    <view class="merow">
+      <view class="ricon">📤</view>
+      <view class="grow"><view class="t">导出完整备份（含照片）</view><view class="s">复制到剪贴板 / 转发文件</view></view>
+      <view class="btn btn-sm" bindtap="onExport">导出</view>
+    </view>
+    <view class="merow">
+      <view class="ricon">📥</view>
+      <view class="grow"><view class="t">导入备份</view><view class="s">从聊天记录选择备份文件</view></view>
+      <view class="btn btn-sm" bindtap="onImport">选择</view>
+    </view>
+    <view class="merow">
+      <view class="ricon">♻️</view>
+      <view class="grow"><view class="t">清空全部数据</view><view class="s">恢复到全新安装状态</view></view>
+      <view class="btn btn-sm btn-danger" bindtap="onWipe">重置</view>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="sub">关于</view>
+    <view class="note">
+      <view>知物寻迹 · 小程序版 v1.0（{{itemN}} 件物品）</view>
+      <view>· 数据仅存本机：照片存文件目录，结构数据存本地存储</view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,33 @@
+{
+  "pages": [
+    "pages/home/home",
+    "pages/room/room",
+    "pages/container/container",
+    "pages/form/form",
+    "pages/view/view",
+    "pages/remind/remind",
+    "pages/settings/settings",
+    "pages/guide/guide",
+    "pages/switch/switch",
+    "pages/lock/lock"
+  ],
+  "window": {
+    "navigationBarTitleText": "知物寻迹",
+    "navigationBarBackgroundColor": "#2e6bf0",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#eef0f5"
+  },
+  "tabBar": {
+    "color": "#616a79",
+    "selectedColor": "#2e6bf0",
+    "backgroundColor": "#ffffff",
+    "list": [
+      { "pagePath": "pages/home/home", "text": "首页" },
+      { "pagePath": "pages/remind/remind", "text": "提醒" },
+      { "pagePath": "pages/settings/settings", "text": "设置" }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

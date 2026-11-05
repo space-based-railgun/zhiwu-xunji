@@ -1,0 +1,24 @@
+<include src="../common/navbar.wxml"/>
+<view class="page" style="padding-top: {{navPad}}px">
+  <view class="h1" style="margin-top: 16rpx">提醒中心</view>
+  <view class="sub" style="margin: 4rpx 4rpx 16rpx">挂在物品与容器上的「时间层」</view>
+  <view class="rowbtns" style="margin-bottom: 20rpx">
+    <view class="btn btn-sm btn-primary" bindtap="onAdd">＋ 自定义提醒</view>
+  </view>
+  <block wx:for="{{sections}}" wx:key="title">
+    <view class="row" style="justify-content: space-between">
+      <view class="h2">{{item.title}}</view>
+      <view class="linkbtn" style="color: var(--g-bad); font-size: 23rpx; padding-right: 4rpx" wx:if="{{item.clear}}" bindtap="onBasketClear">清空</view>
+    </view>
+    <view class="card">
+      <view class="rrow" wx:for="{{item.rows}}" wx:for-item="row" wx:key="key" bindtap="onRow" data-room="{{row.roomId}}" data-c="{{row.cid}}" data-item="{{row.itemId}}">
+        <view class="ricon">{{row.icon}}</view>
+        <view class="rmain"><view class="t">{{row.name}}</view><view class="s">{{row.sub}}</view></view>
+        <view class="chip {{row.badgeCls}}" style="{{row.badgeCls ? row.badgeCls : ''}}">{{row.badge}}</view>
+        <view class="btn btn-sm {{row.act === 'delr' ? 'btn-danger' : ''}}" wx:if="{{row.action}}" catchtap="onAction" data-item="{{row.actionData}}" data-act="{{row.act}}" data-actiondata="{{row.actionData}}">{{row.action}}</view>
+      </view>
+      <view class="empty" wx:if="{{!item.rows.length}}">暂无</view>
+    </view>
+  </block>
+  <view class="note">提醒在打开小程序时展示；正式版计划接入微信订阅消息推送。</view>
+</view>

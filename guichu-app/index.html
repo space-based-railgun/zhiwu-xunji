@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="归处 · 空间记忆管家 —— 本地优先的找物与收纳管理应用">
+<meta name="theme-color" content="#2e6bf0">
+<link rel="manifest" href="manifest.webmanifest">
+<title>归处 · 空间记忆管家</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🏠</text></svg>">
+</head>
+<body>
+<div id="app" class="app">
+  <main id="screens" class="screens">
+    <section id="scr-home" class="screen" aria-label="首页"></section>
+    <section id="scr-remind" class="screen" aria-label="提醒中心" hidden></section>
+    <section id="scr-set" class="screen" aria-label="设置" hidden></section>
+    <section id="scr-room" class="screen roomview" aria-label="房间全景" hidden>
+      <div class="stripwrap" id="stripwrap">
+        <div class="panoimg" id="panoimg"></div>
+        <canvas id="glcanvas" hidden></canvas>
+        <div class="hotspots" id="hotspots"></div>
+        <div class="pano-hint">↔ 左右拖动环视 · 点击圆点查看柜内</div>
+      </div>
+      <div class="pano-under">
+        <div class="pano-titlerow">
+          <button type="button" class="icoBtn cursor" data-act="back" aria-label="返回首页">←</button>
+          <span class="pano-name" id="pano-name">房间</span>
+          <button type="button" class="btn btn-sm cursor" data-act="room-pano-upload">🖼️ 上传全景图</button>
+        </div>
+        <div class="chiprow" id="roomchips"></div>
+        <div class="sub cctitle">本房间收纳点（可在编辑中调整热区方位）</div>
+        <div class="chiprow" id="cchips"></div>
+        <div class="rowbtns" style="margin-top:12px">
+          <button type="button" class="btn cursor" data-act="c-add">＋ 添加收纳点</button>
+          <button type="button" class="btn cursor" data-act="room-edit">✏️ 编辑房间</button>
+          <button type="button" class="btn cursor" data-act="room-del">🗑️ 删除房间</button>
+        </div>
+        <div class="rowbtns" style="margin-top:8px">
+          <button type="button" class="btn cursor" data-act="room-pano-reset">🔄 恢复默认示意图</button>
+        </div>
+        <div class="doortip">提示：上传 2:1 的 360° 全景照片效果最佳；普通照片也可以。左右拖动环视，点击圆点打开柜内清单，用下方房间标签切换房间。</div>
+      </div>
+    </section>
+  </main>
+
+  <nav id="tabbar" class="tabbar" aria-label="底部导航">
+    <button type="button" class="cursor" data-act="tab" data-t="home" aria-label="首页"><span class="ticon">🏠</span><span class="tlabel">首页</span></button>
+    <button type="button" class="cursor" data-act="tab" data-t="remind" aria-label="提醒"><span class="ticon">🔔<b class="badge" id="rbadge" hidden>0</b></span><span class="tlabel">提醒</span></button>
+    <button type="button" class="cursor" data-act="tab" data-t="set" aria-label="设置"><span class="ticon">⚙️</span><span class="tlabel">设置</span></button>
+  </nav>
+
+  <div id="geobanner" class="geobanner" hidden>
+    <span>📍 已离开家附近</span>
+    <button type="button" class="btn btn-sm cursor" data-act="geofence-check">确认出门物品</button>
+    <button type="button" class="geo-x cursor" data-act="geofence-dismiss" aria-label="关闭">✕</button>
+  </div>
+
+  <div id="dim" class="dim" hidden data-act="close-sheet"></div>
+  <div id="sheet" class="sheet" role="dialog" aria-modal="true" hidden></div>
+
+  <div id="modal" class="modal" hidden>
+    <div class="m-box" role="dialog" aria-modal="true">
+      <div class="m-head"><b id="m-title">标题</b><button type="button" class="m-x cursor" id="m-x" aria-label="关闭">✕</button></div>
+      <form id="m-form" novalidate></form>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <div id="lockscreen" class="lockscreen" hidden>
+    <div class="lockbox" id="lock-box">
+      <div class="locklogo">🔒</div>
+      <p class="g-hi" style="margin:6px 0 2px">归处已锁定</p>
+      <p class="sub">输入 PIN 解锁</p>
+      <input id="lock-input" type="password" inputmode="numeric" maxlength="6" readonly aria-label="PIN">
+      <div id="lock-err"></div>
+      <div class="keypad">
+        <button type="button" class="cursor" data-k="1">1</button><button type="button" class="cursor" data-k="2">2</button><button type="button" class="cursor" data-k="3">3</button>
+        <button type="button" class="cursor" data-k="4">4</button><button type="button" class="cursor" data-k="5">5</button><button type="button" class="cursor" data-k="6">6</button>
+        <button type="button" class="cursor" data-k="7">7</button><button type="button" class="cursor" data-k="8">8</button><button type="button" class="cursor" data-k="9">9</button>
+        <button type="button" class="cursor" data-k="del">⌫</button><button type="button" class="cursor" data-k="0">0</button><button type="button" class="cursor" data-k="ok">✓</button>
+      </div>
+    </div>
+  </div>
+  <div id="print-area" class="print-only"></div>
+</div>
+
+<input type="file" id="file-pano" accept="image/*" hidden>
+<input type="file" id="file-import" accept=".json,application/json" hidden>
+
+<script src="js/store.js"></script>
+<script src="js/pano.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

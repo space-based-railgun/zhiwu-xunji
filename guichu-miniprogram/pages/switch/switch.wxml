@@ -1,0 +1,20 @@
+<view class="page">
+  <view class="h1">谁在用？</view>
+  <view class="sub" style="margin: 4rpx 4rpx 24rpx">选择身份后，录入的物品会记在你名下</view>
+  <view class="accgrid">
+    <view class="acccard {{item.cur ? 'accent' : ''}}" wx:for="{{members}}" wx:key="id" bindtap="onPick" data-id="{{item.id}}">
+      <view class="accava">
+        <image wx:if="{{item.avatar}}" class="accava-img" src="{{item.avatar}}" />
+        <text wx:else>{{item.emoji}}</text>
+      </view>
+      <view class="accname">{{item.name}}</view>
+      <view class="accsub">{{item.cur ? '当前使用' : (item.pin ? '🔒 需要 PIN' : item.role)}}</view>
+    </view>
+    <view class="acccard" bindtap="onAdd">
+      <view class="accava">＋</view>
+      <view class="accname">添加成员</view>
+      <view class="accsub">家人 / 室友</view>
+    </view>
+  </view>
+  <view class="note" style="margin-top: 26rpx">想给某个成员加密码：设置 → 账户与成员 → 编辑，设置 4 位 PIN。PIN 只存在本机，不会上传。</view>
+</view>

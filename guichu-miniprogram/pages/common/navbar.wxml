@@ -1,0 +1,5 @@
+<view class="cnav" style="padding-top: {{sbH}}px">
+  <view class="cnav-bar" style="height: {{barH}}px">
+    <view class="cnav-title">知物寻迹</view>
+  </view>
+</view>

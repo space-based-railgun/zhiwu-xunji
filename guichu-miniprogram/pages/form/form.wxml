@@ -1,0 +1,188 @@
+<view class="page">
+  <view class="h1">{{title}}</view>
+  <view class="hint" wx:if="{{hint}}">{{hint}}</view>
+
+  <!-- 物品 -->
+  <block wx:if="{{type === 'item'}}">
+    <view class="btn btn-primary btn-block" style="margin-top: 24rpx" bindtap="onAiFill">📷 拍一下，让 AI 帮我填</view>
+    <view class="f-label">物品名称 *</view>
+    <input class="input" focus="{{nameFocus}}" value="{{f.name}}" bindinput="bindF" data-k="name" placeholder="如：护照" />
+    <view class="f-label">重要级（决定排序与提醒优先级）</view>
+    <picker range="{{impLabels}}" value="{{f.impIdx}}" bindchange="bindF" data-k="impIdx"><view class="picker-line">{{impLabels[f.impIdx]}}</view></picker>
+    <view class="f-label">照片（自动压缩存储）</view>
+    <view class="btn" bindtap="onPhoto">📷 {{photoPath ? '已选照片 · 点击更换' : '拍摄 / 从相册选择'}}</view>
+    <image class="f-preview" wx:if="{{photoPath}}" src="{{photoPath}}" />
+    <view class="advbtn" bindtap="onAdv">{{adv ? '收起更多选项 ▴' : '更多选项（标签 / 数量 / 备注…）▾'}}</view>
+    <block wx:if="{{adv}}">
+      <view class="f-label">权属</view>
+      <picker range="{{ownerLabels}}" value="{{f.ownerIdx}}" bindchange="bindF" data-k="ownerIdx"><view class="picker-line">{{ownerLabels[f.ownerIdx]}}</view></picker>
+      <view class="f-label">标签（逗号分隔，用于联想与搜索）</view>
+      <input class="input" value="{{f.tags}}" bindinput="bindF" data-k="tags" placeholder="如：证件,出行" />
+      <view class="f-check"><checkbox checked="{{f.cons}}" bindtap="bindF" data-k="cons" /> 消耗品（启用数量管理）</view>
+      <view class="row" style="gap: 14rpx">
+        <view style="flex: 1"><view class="f-label">数量</view><input class="input" type="number" value="{{f.qty}}" bindinput="bindF" data-k="qty" /></view>
+        <view style="flex: 1"><view class="f-label">单位</view><input class="input" value="{{f.unit}}" bindinput="bindF" data-k="unit" placeholder="盒/瓶" /></view>
+        <view style="flex: 1"><view class="f-label">效期(天)</view><input class="input" type="number" value="{{f.expiry}}" bindinput="bindF" data-k="expiry" /></view>
+      </view>
+      <view class="f-label">备注</view>
+      <textarea class="textarea" value="{{f.note}}" bindinput="bindF" data-k="note" />
+      <view class="f-check"><checkbox checked="{{f.cont}}" bindtap="bindF" data-k="cont" /> 保存后继续录入下一件（连续模式）</view>
+    </block>
+  </block>
+
+  <!-- 收纳点 -->
+  <block wx:if="{{type === 'container'}}">
+    <view class="f-label">收纳点名称 *</view>
+    <input class="input" value="{{f.name}}" bindinput="bindF" data-k="name" placeholder="如：书桌·左抽屉" />
+    <view class="f-label">图标（点选）</view>
+    <view class="emgrid">
+      <view class="em {{f.emoji === item ? 'emon' : ''}}" wx:for="{{emojis}}" wx:key="*this" bindtap="onEmoji" data-e="{{item}}">{{item}}</view>
+    </view>
+    <view class="f-label">照片（方便回忆里面放了什么）</view>
+    <view class="btn" bindtap="onPhoto">📷 {{photoPath ? '已选 · 点击更换' : '拍摄 / 从相册选择'}}</view>
+    <view class="advbtn" bindtap="onAdv">{{adv ? '收起高级选项 ▴' : '高级选项（视图类型 / 圆点位置 / 分区）▾'}}</view>
+    <block wx:if="{{adv}}">
+      <view class="f-label">视图类型</view>
+      <picker range="{{kindLabels}}" value="{{f.kindIdx}}" bindchange="bindF" data-k="kindIdx"><view class="picker-line">{{kindLabels[f.kindIdx]}}</view></picker>
+      <view class="f-label">圆点 · 左右位置 {{f.yaw}}°（在全景图上从左到右的方位，没有全景图可忽略）</view>
+      <slider min="0" max="359" value="{{f.yaw}}" bindchange="bindF" data-k="yaw" activeColor="#2e6bf0" />
+      <view class="f-label">圆点 · 高度（靠上还是靠下）</view>
+      <picker range="{{rowLabels}}" value="{{f.rowIdx}}" bindchange="bindF" data-k="rowIdx"><view class="picker-line">{{rowLabels[f.rowIdx]}}</view></picker>
+      <view class="f-label">所属逻辑分区（点击切换）</view>
+      <view class="chiprow">
+        <view class="qchip {{z.on ? 'active' : ''}}" wx:for="{{zoneFlags}}" wx:for-item="z" wx:for-index="i" wx:key="id" bindtap="onZoneFlag" data-i="{{i}}">{{z.name}}</view>
+      </view>
+    </block>
+  </block>
+
+  <!-- 房间 -->
+  <block wx:if="{{type === 'room'}}">
+    <view class="f-label">房间名称 *</view>
+    <input class="input" value="{{f.name}}" bindinput="bindF" data-k="name" placeholder="如：书房" />
+    <view class="f-label">主题色</view>
+    <picker range="{{hueNames}}" value="{{f.hueIdx}}" bindchange="bindF" data-k="hueIdx"><view class="picker-line">{{hueNames[f.hueIdx]}}</view></picker>
+  </block>
+
+  <!-- 住址 / 分区 -->
+  <block wx:if="{{type === 'scene' || type === 'zone'}}">
+    <view class="f-label">名称 *</view>
+    <input class="input" value="{{f.name}}" bindinput="bindF" data-k="name" placeholder="{{type === 'scene' ? '如：父母家' : '如：出差装备区'}}" />
+    <view class="f-label">图标（点选）</view>
+    <view class="emgrid">
+      <view class="em {{f.emoji === item ? 'emon' : ''}}" wx:for="{{emojis}}" wx:key="*this" bindtap="onEmoji" data-e="{{item}}">{{item}}</view>
+    </view>
+  </block>
+
+  <!-- 日程 -->
+  <block wx:if="{{type === 'event'}}">
+    <view class="f-label">日程标题 *（含露营/出差/体检等关键词会自动联想物品）</view>
+    <input class="input" value="{{f.title}}" bindinput="bindF" data-k="title" placeholder="如：周六露营" />
+    <view class="f-label">日期</view>
+    <picker mode="date" value="{{f.date}}" bindchange="bindF" data-k="date"><view class="picker-line">{{f.date}}</view></picker>
+    <view class="f-label">图标（点选）</view>
+    <view class="emgrid">
+      <view class="em {{f.emoji === item ? 'emon' : ''}}" wx:for="{{emojis}}" wx:key="*this" bindtap="onEmoji" data-e="{{item}}">{{item}}</view>
+    </view>
+  </block>
+
+  <!-- 外借 -->
+  <block wx:if="{{type === 'lend'}}">
+    <view class="f-label">借给谁 *</view>
+    <input class="input" value="{{f.to}}" bindinput="bindF" data-k="to" placeholder="如：同事小王" />
+    <view class="f-label">预计归还日期</view>
+    <picker mode="date" value="{{f.due}}" bindchange="bindF" data-k="due"><view class="picker-line">{{f.due}}</view></picker>
+  </block>
+
+  <!-- 移动 -->
+  <block wx:if="{{type === 'move'}}">
+    <view class="f-label">目标房间</view>
+    <picker range="{{rooms}}" value="{{roomIdx}}" bindchange="onRoomMove"><view class="picker-line">{{rooms[roomIdx]}}</view></picker>
+    <view class="f-label">目标收纳点</view>
+    <picker range="{{contsForMove}}" value="{{contIdx}}" bindchange="bindF" data-k="contIdx"><view class="picker-line">{{contsForMove[contIdx]}}</view></picker>
+    <view class="note">移动会记入位置变更历史。</view>
+  </block>
+
+  <!-- 提醒 -->
+  <block wx:if="{{type === 'reminder'}}">
+    <view class="f-label">提醒内容 *</view>
+    <input class="input" value="{{f.title}}" bindinput="bindF" data-k="title" placeholder="如：检查药箱" />
+    <view class="f-label">日期</view>
+    <picker mode="date" value="{{f.date}}" bindchange="bindF" data-k="date"><view class="picker-line">{{f.date}}</view></picker>
+    <view class="f-label">重复</view>
+    <picker range="{{['不重复', '每 3 个月', '每年']}}" value="{{f.repeatIdx}}" bindchange="bindF" data-k="repeatIdx"><view class="picker-line">{{['不重复', '每 3 个月', '每年'][f.repeatIdx]}}</view></picker>
+  </block>
+
+  <!-- AI 配置 -->
+  <block wx:if="{{type === 'ai'}}">
+    <view class="hint">AI 用的是智谱免费模型 glm-4v-flash，模型不收费。获取 Key：手机浏览器打开 open.bigmodel.cn → 注册登录（免费）→ 左侧「API 密钥」→ 创建并复制，然后点下面「读取剪贴板 Key」。</view>
+    <view class="rowbtns" style="margin-top: 16rpx">
+      <view class="btn" bindtap="onCopyAiUrl">📋 复制注册网址</view>
+      <view class="btn" bindtap="onPasteKey">📥 读取剪贴板 Key</view>
+    </view>
+    <view class="f-label">API Key（仅存本机）</view>
+    <input class="input" password value="{{f.key}}" bindinput="bindF" data-k="key" />
+    <view class="f-label">API 地址（一般不用改）</view>
+    <input class="input" value="{{f.url}}" bindinput="bindF" data-k="url" />
+    <view class="f-label">模型名（一般不用改）</view>
+    <input class="input" value="{{f.model}}" bindinput="bindF" data-k="model" />
+    <view class="note">开发工具里请勾选「不校验合法域名」；真机测试的临时办法：点右上角「···」→ 开发调试 → 打开调试；正式发布需在小程序后台把 open.bigmodel.cn 配进 request 合法域名。</view>
+  </block>
+
+  <!-- 成员账户 -->
+  <block wx:if="{{type === 'member'}}">
+    <view class="f-label">名字 *</view>
+    <input class="input" value="{{f.name}}" bindinput="bindF" data-k="name" placeholder="如：妈妈" />
+    <view class="f-label">头像（点选）</view>
+    <view class="emgrid">
+      <view class="em {{f.emoji === item ? 'emon' : ''}}" wx:for="{{emojis}}" wx:key="*this" bindtap="onEmoji" data-e="{{item}}">{{item}}</view>
+    </view>
+    <view class="f-label">绑定微信身份（仅存本机 · 开通云同步后用于对应家人账号）</view>
+    <view class="row" style="gap: 16rpx; margin-top: 6rpx">
+      <button class="btn" open-type="chooseAvatar" bind:chooseavatar="onWxAvatar">{{wxAvatar ? '更换微信头像 ✓' : '一键获取微信头像'}}</button>
+      <image class="ava-mini" wx:if="{{wxAvatar}}" src="{{wxAvatar}}" />
+    </view>
+    <view class="f-label">微信昵称（点输入框可自动带出）</view>
+    <input class="input" type="nickname" value="{{f.wxName}}" bindinput="bindF" data-k="wxName" placeholder="点此带出微信昵称" />
+    <view class="f-label">PIN（4 位数字，留空则无需密码）</view>
+    <input class="input" type="number" maxlength="4" password value="{{f.pin}}" bindinput="bindF" data-k="pin" placeholder="如：8888" />
+    <view class="btn btn-block btn-danger" style="margin-top: 30rpx" wx:if="{{editMember}}" bindtap="onDeleteMember">删除该成员</view>
+  </block>
+
+  <!-- 应用锁 -->
+  <block wx:if="{{type === 'lockset'}}">
+    <view class="f-label">PIN（4-6 位数字）*</view>
+    <input class="input" password type="number" maxlength="6" value="{{f.pin1}}" bindinput="bindF" data-k="pin1" />
+    <view class="f-label">再输入一次</view>
+    <input class="input" password type="number" maxlength="6" value="{{f.pin2}}" bindinput="bindF" data-k="pin2" />
+    <view class="note">PIN 以哈希保存在本机。忘记 PIN：导出备份 → 清空数据 → 导入备份。</view>
+  </block>
+
+  <!-- 打包单个收纳点 -->
+  <block wx:if="{{type === 'packone'}}">
+    <view class="f-label">装入纸箱</view>
+    <input class="input" value="{{f.box}}" bindinput="bindF" data-k="box" placeholder="如：纸箱3" />
+  </block>
+
+  <!-- 打包模式 -->
+  <block wx:if="{{type === 'pack'}}">
+    <view class="card" wx:if="{{boxNames.length}}">
+      <view class="sub" style="margin-bottom: 8rpx">已打包箱（点击查看/开箱）</view>
+      <view class="chiprow">
+        <view class="qchip" wx:for="{{boxNames}}" wx:key="*this" bindtap="onBoxView" data-box="{{item}}">📦 {{item}}</view>
+      </view>
+    </view>
+    <view class="card" wx:for="{{packRows}}" wx:key="cid">
+      <view class="row">
+        <view class="grow">
+          <view class="iname">{{item.cname}}</view>
+          <view class="s sub">{{item.room}} · {{item.n}} 件</view>
+        </view>
+        <view class="btn btn-sm {{item.packed ? '' : 'btn-primary'}}" bindtap="{{item.packed ? 'onBoxView' : 'onPackOne'}}" data-box="{{item.box}}" data-roomid="{{item.roomId}}" data-cid="{{item.cid}}">
+          {{item.packed ? '已打包 · ' + item.box : '打包为' + item.next}}
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <view class="btn btn-primary btn-block" style="margin-top: 30rpx" wx:if="{{showSave}}" bindtap="onSave">保存</view>
+</view>
