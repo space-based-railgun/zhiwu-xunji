@@ -6,6 +6,31 @@
     </view>
     <view class="btn btn-sm" bindtap="onEditC">编辑</view>
   </view>
+  <view class="note">点击任意物品，可在其正下方展开详情与快捷操作（编辑 / 移动 / 外借 / 提醒 / 权属 / 丢弃）。</view>
+
+  <!-- 详情模板：点哪个物品，详情就出现在哪个物品下方 -->
+  <template name="itemdetail">
+    <block wx:if="{{expanded === item.id && item.detail}}">
+      <image class="f-preview" wx:if="{{item.photo}}" src="{{item.photo}}" />
+      <view class="dpath">📍 {{item.detail.path}}</view>
+      <view class="dpath" wx:if="{{item.detail.tags}}">🏷️ {{item.detail.tags}}</view>
+      <view class="dpath" wx:if="{{item.expiry}}">⏳ 效期剩余 {{item.expiry}} 天</view>
+      <view class="dpath" wx:if="{{item.detail.lent}}">🤝 {{item.detail.lent}}</view>
+      <view class="dpath" wx:if="{{item.detail.note}}">📝 {{item.detail.note}}</view>
+      <view class="dpath" wx:if="{{item.owner}}">👤 {{item.owner}}</view>
+      <view class="dpath" wx:if="{{item.detail.ownerName}}">🧑‍💼 录入人：{{item.detail.ownerName}}</view>
+      <view class="dpath" wx:for="{{item.detail.hist}}" wx:for-item="h" wx:key="t">🕘 {{h.text}} · {{h.t}}</view>
+      <view class="rowbtns">
+        <view class="btn btn-sm" bindtap="onForm" data-type="item" data-item="{{item.id}}">编辑</view>
+        <view class="btn btn-sm" bindtap="onForm" data-type="move" data-item="{{item.id}}">移动</view>
+        <view class="btn btn-sm" bindtap="onForm" data-type="lend" data-item="{{item.id}}">外借</view>
+        <view class="btn btn-sm" bindtap="onForm" data-type="reminder" data-item="{{item.id}}">设提醒</view>
+        <view class="btn btn-sm" bindtap="onOwner" data-item="{{item.id}}">权属</view>
+        <view class="btn btn-sm btn-danger" bindtap="onDiscard" data-item="{{item.id}}">{{item.discarded ? '恢复' : '丢弃'}}</view>
+        <view class="btn btn-sm btn-danger" bindtap="onDel" data-item="{{item.id}}">删除</view>
+      </view>
+    </block>
+  </template>
 
   <!-- 库存视图 -->
   <block wx:if="{{kind === 'stock'}}">
@@ -25,6 +50,7 @@
         <view class="track"><view class="fill" style="width: {{item.expiryPct}}%; background: {{item.expiryCol}}"></view></view>
         <view class="sub">{{item.expiryText}}</view>
       </view>
+      <template is="itemdetail" data="{{ item: item, expanded: expanded }}" />
     </view>
   </block>
 
@@ -45,11 +71,14 @@
   <!-- 档案视图 -->
   <block wx:if="{{kind === 'archive'}}">
     <view class="card">
-      <view class="rrow" wx:for="{{rows}}" wx:key="id" bindtap="onExpand" data-item="{{item.id}}">
-        <view class="ricon">{{item.owner === '私有' ? '🔒' : '📁'}}</view>
-        <view class="rmain"><view class="t">{{item.name}} <text class="chip c-red" wx:if="{{item.secret}}">保密</text></view></view>
-        <view class="chev">▾</view>
-      </view>
+      <block wx:for="{{rows}}" wx:key="id">
+        <view class="rrow" bindtap="onExpand" data-item="{{item.id}}">
+          <view class="ricon">{{item.owner === '私有' ? '🔒' : '📁'}}</view>
+          <view class="rmain"><view class="t">{{item.name}} <text class="chip c-red" wx:if="{{item.secret}}">保密</text></view></view>
+          <view class="chev">▾</view>
+        </view>
+        <template is="itemdetail" data="{{ item: item, expanded: expanded }}" />
+      </block>
     </view>
   </block>
 
@@ -59,6 +88,7 @@
       <view class="kid" wx:for="{{rows}}" wx:key="id" bindtap="onExpand" data-item="{{item.id}}">
         <view style="font-size: 52rpx">{{item.emoji || '🧸'}}</view>
         <view style="font-weight: 600">{{item.name}}</view>
+        <template is="itemdetail" data="{{ item: item, expanded: expanded }}" />
       </view>
     </view>
   </block>
@@ -74,30 +104,7 @@
         </view>
         <view class="chev" bindtap="onExpand" data-item="{{item.id}}">▾</view>
       </view>
-    </view>
-  </block>
-
-  <!-- 展开详情（通用，跟随 expanded） -->
-  <block wx:if="{{expanded}}">
-    <view class="card" wx:for="{{rows}}" wx:key="id" wx:if="{{item.id === expanded && item.detail}}">
-      <image class="f-preview" wx:if="{{item.photo}}" src="{{item.photo}}" />
-      <view class="dpath">📍 完整路径：{{item.detail.path}}</view>
-      <view class="dpath" wx:if="{{item.detail.tags}}">🏷️ {{item.detail.tags}}</view>
-      <view class="dpath" wx:if="{{item.expiry}}">⏳ 效期剩余 {{item.expiry}} 天</view>
-      <view class="dpath" wx:if="{{item.detail.lent}}">🤝 {{item.detail.lent}}</view>
-      <view class="dpath" wx:if="{{item.detail.note}}">📝 {{item.detail.note}}</view>
-      <view class="dpath" wx:if="{{item.owner}}">👤 {{item.owner}}</view>
-      <view class="dpath" wx:if="{{item.detail.ownerName}}">🧑‍💼 录入人：{{item.detail.ownerName}}</view>
-      <view class="dpath" wx:for="{{item.detail.hist}}" wx:for-item="h" wx:key="t">🕘 {{h.text}} · {{h.t}}</view>
-      <view class="rowbtns">
-        <view class="btn btn-sm" bindtap="onForm" data-type="item-edit" data-item="{{item.id}}">编辑</view>
-        <view class="btn btn-sm" bindtap="onForm" data-type="move" data-item="{{item.id}}">移动</view>
-        <view class="btn btn-sm" bindtap="onForm" data-type="lend" data-item="{{item.id}}">外借</view>
-        <view class="btn btn-sm" bindtap="onForm" data-type="reminder" data-item="{{item.id}}">设提醒</view>
-        <view class="btn btn-sm" bindtap="onOwner" data-item="{{item.id}}">权属</view>
-        <view class="btn btn-sm btn-danger" bindtap="onDiscard" data-item="{{item.id}}">{{item.discarded ? '恢复' : '丢弃'}}</view>
-        <view class="btn btn-sm btn-danger" bindtap="onDel" data-item="{{item.id}}">删除</view>
-      </view>
+      <template is="itemdetail" data="{{ item: item, expanded: expanded }}" />
     </view>
   </block>
 
@@ -127,5 +134,4 @@
     <view class="btn btn-primary" style="flex: 1" bindtap="onAI">🤖 拍照认物品</view>
     <view class="btn" style="flex: 1" bindtap="onAdd">＋ 手动录入</view>
   </view>
-  <view class="note" wx:if="{{kind === 'default'}}">点击条目展开详情与操作（移动 / 外借 / 提醒 / 权属 / 丢弃）。</view>
 </view>

@@ -35,7 +35,7 @@ Page({
           tags: (it.tags || []).map(function(t){ return '#' + t; }).join('  '),
           note: it.note || '', lent: (it.lent && !store.db.returned[it.id]) ? ('外借给 ' + it.lent.to + ' · 应还 ' + it.lent.due) : '',
           ownerName: it.ownerId ? (store.memberName(it.ownerId) || '') : '',
-          hist: (it.history || []).slice(0, 4)
+          hist: (it.history || []).slice(0, 4).map(function(h){ return { text: h.text, t: (h.t || '').replace('T', ' ').slice(0, 16) }; })
         } : null,
         discarded: it.status === 'discarded'
       };
@@ -98,7 +98,8 @@ Page({
   onEditC: function(){ wx.navigateTo({ url: '/pages/form/form?type=container&room=' + this.roomId + '&edit=' + this.cid }); },
   onForm: function(e){
     var d = e.currentTarget.dataset;
-    wx.navigateTo({ url: '/pages/form/form?type=' + d.type + (d.item ? '&item=' + d.item : '') + '&room=' + this.roomId + '&c=' + this.cid });
+    var type = d.type === 'item-edit' ? 'item' : d.type; /* 兼容旧详情按钮的编辑参数 */
+    wx.navigateTo({ url: '/pages/form/form?type=' + type + (d.item ? '&item=' + d.item : '') + '&room=' + this.roomId + '&c=' + this.cid });
   },
   /* ---------- AI 识别 ---------- */
   onAI: function(){
