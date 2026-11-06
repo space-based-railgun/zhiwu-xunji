@@ -7,3 +7,4 @@ _tmp_*.py
 *.log
 .DS_Store
 Thumbs.db
+.zcode/

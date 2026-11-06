@@ -1,7 +1,0 @@
-{
-  "plugins": {
-    "enabledPlugins": {
-      "prompt-polisher@dev-prompt-polisher-local": true
-    }
-  }
-}
