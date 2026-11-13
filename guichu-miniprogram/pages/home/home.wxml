@@ -18,14 +18,14 @@
   <view class="card" wx:if="{{guideTasks.length}}" style="margin-top: 20rpx">
     <view class="row" style="justify-content: space-between">
       <view class="h2" style="margin: 0">🧭 新手上路 · {{guideDone}}/4</view>
-      <view class="linkbtn" style="color: var(--g-text2); font-size: 23rpx" bindtap="onGuideHide">收起</view>
+      <view class="linkbtn" style="color: #616a79; font-size: 23rpx" bindtap="onGuideHide">收起</view>
     </view>
     <view class="rrow" wx:for="{{guideTasks}}" wx:key="id" bindtap="onGuideStep" data-type="{{item.type}}">
       <view class="ricon">{{item.done ? '✅' : item.icon}}</view>
       <view class="rmain"><view class="t">{{item.label}}</view><view class="s">{{item.desc}}</view></view>
       <view class="btn btn-sm {{item.done ? '' : 'btn-primary'}}">{{item.done ? '已完成' : '去完成'}}</view>
     </view>
-    <view class="linkbtn" style="color: var(--g-brand); font-size: 23rpx; padding-top: 10rpx" bindtap="onGuideOpen">📖 查看完整新手指南</view>
+    <view class="linkbtn" style="color: #2e6bf0; font-size: 23rpx; padding-top: 10rpx" bindtap="onGuideOpen">📖 查看完整新手指南</view>
   </view>
 
   <view class="scrollx" style="margin-top: 20rpx">
@@ -77,13 +77,13 @@
       <view class="ricon">📍</view>
       <view class="rmain"><view class="t">防忘带 · 出门必带清单</view><view class="s">出门前打勾确认：钥匙、工牌、雨伞</view></view>
     </view>
-    <navigator url="/pages/remind/remind" open-type="switchTab"><view class="linkbtn" style="color: var(--g-brand); font-size: 23rpx; padding-top: 10rpx">查看全部 {{total}} 条 →</view></navigator>
+    <navigator url="/pages/remind/remind" open-type="switchTab"><view class="linkbtn" style="color: #2e6bf0; font-size: 23rpx; padding-top: 10rpx">查看全部 {{total}} 条 →</view></navigator>
   </view>
 
   <block wx:if="{{isHome}}">
     <view class="row" style="justify-content: space-between; margin-top: 30rpx">
       <view class="h2" style="margin: 0">本周日程 · 自动备物</view>
-      <view class="linkbtn" style="color: var(--g-brand); font-size: 23rpx" bindtap="onEventAdd">＋ 日程</view>
+      <view class="linkbtn" style="color: #2e6bf0; font-size: 23rpx" bindtap="onEventAdd">＋ 日程</view>
     </view>
     <view class="card">
       <view class="rrow" wx:for="{{events}}" wx:key="id" bindtap="onEvent" data-id="{{item.id}}">
@@ -95,7 +95,7 @@
 
     <view class="row" style="justify-content: space-between; margin-top: 30rpx">
       <view class="h2" style="margin: 0">逻辑分区</view>
-      <view class="linkbtn" style="color: var(--g-brand); font-size: 23rpx" bindtap="onZoneAdd">＋ 分区</view>
+      <view class="linkbtn" style="color: #2e6bf0; font-size: 23rpx" bindtap="onZoneAdd">＋ 分区</view>
     </view>
     <view class="chiprow" style="margin-bottom: 8rpx">
       <view class="qchip" wx:for="{{zones}}" wx:key="id" bindtap="onZone" data-id="{{item.id}}">{{item.emoji}} {{item.name}} · {{item.n}}件</view>
@@ -105,8 +105,8 @@
   <view class="row" style="justify-content: space-between; margin-top: 30rpx">
     <view class="h2" style="margin: 0">{{sceneName}}</view>
     <view class="row" style="gap: 18rpx">
-      <view class="linkbtn" style="color: var(--g-brand); font-size: 23rpx" wx:if="{{isHome}}" bindtap="onPack">📦 搬家打包</view>
-      <view class="linkbtn" style="color: var(--g-brand); font-size: 23rpx" bindtap="onRoomAdd">＋ 房间</view>
+      <view class="linkbtn" style="color: #2e6bf0; font-size: 23rpx" wx:if="{{isHome}}" bindtap="onPack">📦 搬家打包</view>
+      <view class="linkbtn" style="color: #2e6bf0; font-size: 23rpx" bindtap="onRoomAdd">＋ 房间</view>
     </view>
   </view>
   <view class="roomgrid">

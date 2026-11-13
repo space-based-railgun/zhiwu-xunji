@@ -1,0 +1,68 @@
+{
+  "miniVersion": "v2",
+  "name": "知物寻迹",
+  "version": "1.0.0",
+  "versionCode": 100,
+  "i18nFilePath": "i18n",
+  "mini-ohos": {
+    "sdkVersion": "0.5.1"
+  },
+  "mini-android": {
+    "resourcePath": "miniapp/android/nativeResources",
+    "sdkVersion": "1.7.0",
+    "toolkitVersion": "0.11.0",
+    "useExtendedSdk": {
+      "media": false,
+      "bluetooth": false,
+      "network": false,
+      "scanner": false,
+      "xweb": false
+    },
+    "icons": {
+      "hdpi": "C:/Users/lenovo/.zcode/workspace/draft-9a966d5f-0b73-4cbf-ba01-f2935d507e91/guichu-miniprogram/miniapp/assets/icons/ic_launcher_hdpi.png",
+      "xhdpi": "C:/Users/lenovo/.zcode/workspace/draft-9a966d5f-0b73-4cbf-ba01-f2935d507e91/guichu-miniprogram/miniapp/assets/icons/ic_launcher_xhdpi.png",
+      "xxhdpi": "C:/Users/lenovo/.zcode/workspace/draft-9a966d5f-0b73-4cbf-ba01-f2935d507e91/guichu-miniprogram/miniapp/assets/icons/ic_launcher_xxhdpi.png",
+      "xxxhdpi": "C:/Users/lenovo/.zcode/workspace/draft-9a966d5f-0b73-4cbf-ba01-f2935d507e91/guichu-miniprogram/miniapp/assets/icons/ic_launcher_xxxhdpi.png"
+    },
+    "splashscreen": {
+      "hdpi": "",
+      "xhdpi": "",
+      "xxhdpi": ""
+    },
+    "enableVConsole": "close",
+    "privacy": {
+      "enable": true
+    }
+  },
+  "mini-ios": {
+    "sdkVersion": "1.7.0",
+    "toolkitVersion": "0.0.9",
+    "useExtendedSdk": {
+      "WeAppOpenFuns": true,
+      "WeAppNetwork": false,
+      "WeAppBluetooth": false,
+      "WeAppMedia": false,
+      "WeAppLBS": false,
+      "WeAppOthers": false
+    },
+    "enableVConsole": "close",
+    "icons": {
+      "mainIcon120": "C:/Users/lenovo/.zcode/workspace/draft-9a966d5f-0b73-4cbf-ba01-f2935d507e91/guichu-miniprogram/miniapp/assets/icons/icon_120.png",
+      "mainIcon180": "C:/Users/lenovo/.zcode/workspace/draft-9a966d5f-0b73-4cbf-ba01-f2935d507e91/guichu-miniprogram/miniapp/assets/icons/icon_180.png",
+      "spotlightIcon80": "C:/Users/lenovo/.zcode/workspace/draft-9a966d5f-0b73-4cbf-ba01-f2935d507e91/guichu-miniprogram/miniapp/assets/icons/icon_80.png",
+      "spotlightIcon120": "C:/Users/lenovo/.zcode/workspace/draft-9a966d5f-0b73-4cbf-ba01-f2935d507e91/guichu-miniprogram/miniapp/assets/icons/icon_120.png",
+      "settingsIcon58": "C:/Users/lenovo/.zcode/workspace/draft-9a966d5f-0b73-4cbf-ba01-f2935d507e91/guichu-miniprogram/miniapp/assets/icons/icon_58.png",
+      "settingsIcon87": "C:/Users/lenovo/.zcode/workspace/draft-9a966d5f-0b73-4cbf-ba01-f2935d507e91/guichu-miniprogram/miniapp/assets/icons/icon_87.png",
+      "notificationIcon40": "C:/Users/lenovo/.zcode/workspace/draft-9a966d5f-0b73-4cbf-ba01-f2935d507e91/guichu-miniprogram/miniapp/assets/icons/icon_40.png",
+      "notificationIcon60": "C:/Users/lenovo/.zcode/workspace/draft-9a966d5f-0b73-4cbf-ba01-f2935d507e91/guichu-miniprogram/miniapp/assets/icons/icon_60.png",
+      "appStore1024": "C:/Users/lenovo/.zcode/workspace/draft-9a966d5f-0b73-4cbf-ba01-f2935d507e91/guichu-miniprogram/miniapp/assets/icons/icon_1024.png"
+    },
+    "splashScreen": {
+      "customImage": ""
+    },
+    "privacy": {
+      "enable": false
+    },
+    "enableOpenUrlNavigate": true
+  }
+}

@@ -8,13 +8,13 @@
   <block wx:for="{{sections}}" wx:key="title">
     <view class="row" style="justify-content: space-between">
       <view class="h2">{{item.title}}</view>
-      <view class="linkbtn" style="color: var(--g-bad); font-size: 23rpx; padding-right: 4rpx" wx:if="{{item.clear}}" bindtap="onBasketClear">清空</view>
+      <view class="linkbtn" style="color: #cd3d3d; font-size: 23rpx; padding-right: 4rpx" wx:if="{{item.clear}}" bindtap="onBasketClear">清空</view>
     </view>
     <view class="card">
       <view class="rrow" wx:for="{{item.rows}}" wx:for-item="row" wx:key="key" bindtap="onRow" data-room="{{row.roomId}}" data-c="{{row.cid}}" data-item="{{row.itemId}}">
         <view class="ricon">{{row.icon}}</view>
         <view class="rmain"><view class="t">{{row.name}}</view><view class="s">{{row.sub}}</view></view>
-        <view class="chip {{row.badgeCls}}" style="{{row.badgeCls ? row.badgeCls : ''}}">{{row.badge}}</view>
+        <view class="chip" style="{{row.badgeCls ? row.badgeCls : ''}}">{{row.badge}}</view>
         <view class="btn btn-sm {{row.act === 'delr' ? 'btn-danger' : ''}}" wx:if="{{row.action}}" catchtap="onAction" data-item="{{row.actionData}}" data-act="{{row.act}}" data-actiondata="{{row.actionData}}">{{row.action}}</view>
       </view>
       <view class="empty" wx:if="{{!item.rows.length}}">暂无</view>

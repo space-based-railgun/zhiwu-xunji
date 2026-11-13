@@ -27,7 +27,7 @@ Page({
         qty: it.qty != null ? it.qty + (it.unit || '') : '', expiry: it.expiry,
         expiryText: it.expiry ? (it.expiry <= 1 ? '明天到期' : it.expiry + '天后到期') : '',
         expiryPct: it.expiry ? Math.max(5, Math.min(100, it.expiry / 90 * 100)) : 0,
-        expiryCol: it.expiry <= 7 ? 'var(--g-bad)' : (it.expiry <= 30 ? 'var(--g-warn)' : 'var(--g-ok)'),
+        expiryCol: it.expiry <= 7 ? '#cd3d3d' : (it.expiry <= 30 ? '#d97c1f' : '#2f9e5b'),
         owner: it.owner && store.OWNLBL[it.owner] ? store.OWNLBL[it.owner][0] : '',
         secret: !!it.secret, emoji: it.emoji || '',
         detail: x ? {

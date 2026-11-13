@@ -10,12 +10,12 @@ Page({
     var basket = store.basketList();
     if (basket.length) sections.push({ title: '🧺 购物清单', clear: true, rows: basket.map(function(x){
       return { key: x.it.id, icon: '🧺', name: x.it.name, sub: x.room.name + ' · ' + x.c.name, badge: '待买',
-        badgeCls: 'background:var(--g-brandsoft);color:var(--g-brand)',
+        badgeCls: 'background:#e9f0fe;color:#2e6bf0',
         roomId: x.room.id, cid: x.c.id, itemId: x.it.id, action: '移出', actionData: x.it.id, act: 'basket' };
     }) });
     sections.push({ title: '⏰ 临期提醒', rows: due.slice(0, 5).map(function(x){
       return { key: x.it.id, icon: '📦', name: x.it.name, sub: x.it.expiry + '天 · ' + x.c.name, badge: x.it.expiry <= 1 ? '明天到期' : x.it.expiry + '天后到期',
-        badgeCls: x.it.expiry <= 7 ? 'background:var(--g-bad);color:#fff' : 'background:var(--g-warn);color:#fff',
+        badgeCls: x.it.expiry <= 7 ? 'background:#cd3d3d;color:#fff' : 'background:#d97c1f;color:#fff',
         roomId: x.room.id, cid: x.c.id, itemId: x.it.id, action: '顺延7天', actionData: x.it.id, act: 'defer' };
     }) });
     sections.push({ title: '🤝 借出归还', rows: lent.map(function(x){
@@ -24,7 +24,7 @@ Page({
         roomId: x.room.id, cid: x.c.id, itemId: x.it.id, action: '已归还', actionData: x.it.id };
     }) });
     sections.push({ title: '🔔 自定义 / 周期盘点', rows: custom.map(function(x){
-      return { key: x.r.id, icon: '🔔', name: x.r.title, sub: (x.r.repeat === 'quarter' ? '每 3 个月 · ' : x.r.repeat === 'year' ? '每年 · ' : '') + store.fmtDate(x.due), badge: x.due + '天', badgeCls: 'background:var(--g-brandsoft);color:var(--g-brand)',
+      return { key: x.r.id, icon: '🔔', name: x.r.title, sub: (x.r.repeat === 'quarter' ? '每 3 个月 · ' : x.r.repeat === 'year' ? '每年 · ' : '') + store.fmtDate(x.due), badge: x.due + '天', badgeCls: 'background:#e9f0fe;color:#2e6bf0',
         roomId: x.r.room, cid: x.r.c, itemId: '', action: '删除', actionData: x.r.id, act: 'delr' };
     }) });
     sections.push({ title: '🧺 库存补货', rows: rs.map(function(x){
