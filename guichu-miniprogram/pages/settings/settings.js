@@ -85,6 +85,18 @@ Page({
         store.wipe(); that.onShow(); wx.showToast({ title: '已重置', icon: 'none' });
       }
     });
+  },
+  onDemo: function(){
+    var that = this;
+    wx.showModal({
+      title: '载入示例数据', content: '将替换当前全部数据为演示家庭（我的家 · 6 房 · 51 件物品，含提醒/日程/分区），用于体验与截图。确定？', confirmColor: '#2e6bf0',
+      success: function(res){
+        if (!res.confirm) return;
+        store.loadDemo();
+        that.onShow();
+        wx.showToast({ title: '示例数据已载入 ✓', icon: 'none' });
+      }
+    });
   }
 });
 function djb2(pin, salt){

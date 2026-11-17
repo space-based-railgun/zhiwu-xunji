@@ -178,6 +178,148 @@ function wipe(){
   db = seed();
   save();
 }
+/* ---------- 示例数据（设置页可一键载入，用于体验与截图） ---------- */
+function demoData(){
+  var now = Date.now();
+  function d(days){ return new Date(now + days * 864e5).toISOString().slice(0, 10); }
+  var me = { id: uid('m'), name: '我', role: '管理员', emoji: '🙂', pin: null };
+  return {
+    version: 1,
+    activeScene: 'home',
+    senior: false, lastCat: null, homeLoc: null, geofenceArmed: false, lock: null,
+    ai: JSON.parse(JSON.stringify(AI_DEFAULT)),
+    contEntry: false, contEntryMigrated: true,
+    guide: { seen: true, tasks: { room: true, cont: true, item: true, search: true } },
+    currentUserId: me.id,
+    checklistDone: { 'i-key': true },
+    returned: {},
+    shopping: {},
+    members: [ me,
+      { id: uid('m'), name: '妈妈', role: '成员', emoji: '👩', pin: null },
+      { id: uid('m'), name: '室友小王', role: '成员', emoji: '🧑', pin: null }
+    ],
+    ledger: [
+      { id: uid('l'), text: '游戏手柄 → 妈妈', date: d(-6), returned: true },
+      { id: uid('l'), text: '螺丝刀套装 → 邻居张叔', date: d(-20), returned: true }
+    ],
+    zones: [
+      { id: 'z-med', name: '家庭医疗区', emoji: '💊', containerKeys: ['living.c-med', 'bedroom.c-stand'] },
+      { id: 'z-camp', name: '露营装备区', emoji: '⛺', containerKeys: ['study.c-camp'] },
+      { id: 'z-season', name: '换季冬眠区', emoji: '🧥', containerKeys: ['bedroom.c-ward', 'bedroom.c-bedbox'] },
+      { id: 'z-cert', name: '重要证件区', emoji: '🔒', containerKeys: ['study.c-desk', 'study.c-archive'] }
+    ],
+    customReminders: [
+      { id: uid('r'), title: '家庭药箱季度盘点', date: d(16), repeat: 'quarter', room: 'living', c: 'c-med' },
+      { id: uid('r'), title: '取出厚被子晾晒', date: d(16), repeat: 'none', room: 'bedroom', c: 'c-ward' }
+    ],
+    events: [
+      { id: uid('e'), emoji: '⛺', title: '郊野露营', date: d(1) },
+      { id: uid('e'), emoji: '✈️', title: '出差上海', date: d(3) },
+      { id: uid('e'), emoji: '🏥', title: '体检', date: d(0) }
+    ],
+    scenes: [
+      { id: 'home', name: '我的家', emoji: '🏠', rooms: [
+        { id: 'entry', name: '玄关', hue: 28, containers: [
+          { id: 'c-shoe', name: '鞋柜', kind: 'default', yaw: 55, row: 0.68, emoji: '👟', items: [
+            { id: 'i-access', name: '门禁卡', imp: 'daily', tags: ['卡片', '出门'], note: '门禁 + 公交卡二合一', owner: 'private' },
+            { id: 'i-brush', name: '鞋刷', imp: 'normal', tags: ['清洁'] },
+            { id: 'i-shoes', name: '换季运动鞋', imp: 'dormant', tags: ['鞋类'], note: '入秋后再拿出来' }]},
+          { id: 'c-hook', name: '出门挂钩区', kind: 'checklist', yaw: 185, row: 0.42, emoji: '🔑', items: [
+            { id: 'i-key', name: '钥匙', imp: 'daily', tags: ['出门'] },
+            { id: 'i-badge', name: '工牌', imp: 'daily', tags: ['卡片', '出门'] },
+            { id: 'i-umbrella', name: '雨伞', imp: 'daily', tags: ['出门'] }]},
+          { id: 'c-stock1', name: '囤货收纳箱', kind: 'stock', yaw: 305, row: 0.68, emoji: '📦', items: [
+            { id: 'i-tissue', name: '抽纸', imp: 'normal', cons: true, qty: 8, unit: '包' },
+            { id: 'i-wash', name: '洗手液', imp: 'normal', cons: true, qty: 2, unit: '瓶' }]}
+        ]},
+        { id: 'living', name: '客厅', hue: 170, containers: [
+          { id: 'c-tv', name: '电视柜', kind: 'default', yaw: 40, row: 0.6, emoji: '📺', items: [
+            { id: 'i-remote', name: '遥控器', imp: 'daily', tags: ['影音'], owner: 'family' },
+            { id: 'i-pad', name: '游戏手柄', imp: 'normal', tags: ['影音'] },
+            { id: 'i-cablebox', name: '数据线盒', imp: 'normal', tags: ['电子'] }]},
+          { id: 'c-med', name: '家庭药箱', kind: 'stock', yaw: 150, row: 0.56, emoji: '💊', items: [
+            { id: 'i-cold', name: '感冒灵', imp: 'normal', cons: true, qty: 1, unit: '盒', expiry: 20, note: '一次一袋，温水冲服', owner: 'family' },
+            { id: 'i-bandaid', name: '创可贴', imp: 'normal', cons: true, qty: 12, unit: '片' },
+            { id: 'i-thermo', name: '体温计', imp: 'vital', tags: ['健康'] },
+            { id: 'i-huoxiang', name: '藿香正气水', imp: 'normal', cons: true, qty: 3, unit: '盒', expiry: 60 }]},
+          { id: 'c-charge', name: '充电抽屉', kind: 'default', yaw: 255, row: 0.68, emoji: '🔋', items: [
+            { id: 'i-powerbank', name: '充电宝', imp: 'daily', tags: ['电子', '充电'], lent: { to: '同事小王', due: d(6) }, owner: 'family' },
+            { id: 'i-cable', name: '充电线', imp: 'daily', tags: ['电子', '充电'] },
+            { id: 'i-plug', name: '充电头', imp: 'normal', tags: ['电子', '充电'] }]}
+        ]},
+        { id: 'study', name: '书房', hue: 215, containers: [
+          { id: 'c-desk', name: '书桌·左抽屉', kind: 'default', yaw: 65, row: 0.68, emoji: '🗂️', items: [
+            { id: 'i-passport', name: '护照', imp: 'vital', tags: ['证件', '出行'] },
+            { id: 'i-idcard', name: '身份证', imp: 'vital', tags: ['证件'] },
+            { id: 'i-medicard', name: '医保卡', imp: 'vital', tags: ['证件', '健康'] },
+            { id: 'i-sparekey', name: '备用钥匙', imp: 'vital', tags: ['钥匙'] },
+            { id: 'i-record', name: '病历本', imp: 'vital', tags: ['证件', '健康'] }]},
+          { id: 'c-archive', name: '档案盒', kind: 'archive', yaw: 165, row: 0.66, emoji: '🗄️', items: [
+            { id: 'i-house', name: '房产证', imp: 'vital', secret: true },
+            { id: 'i-ins', name: '保险保单', imp: 'vital', secret: true },
+            { id: 'i-degree', name: '学位证书', imp: 'vital', secret: true }]},
+          { id: 'c-camp', name: '露营装备箱', kind: 'default', yaw: 275, row: 0.68, emoji: '⛺', items: [
+            { id: 'i-tent', name: '帐篷', imp: 'dormant', tags: ['露营'] },
+            { id: 'i-gas', name: '气罐', imp: 'dormant', tags: ['露营'], note: '远离高温' },
+            { id: 'i-lamp', name: '头灯', imp: 'normal', tags: ['露营'] },
+            { id: 'i-mat', name: '防潮垫', imp: 'dormant', tags: ['露营'] }]},
+          { id: 'c-book', name: '书架·第二层', kind: 'default', yaw: 335, row: 0.56, emoji: '📚', items: [
+            { id: 'i-kaoyan', name: '考研资料', imp: 'normal', tags: ['学习'] },
+            { id: 'i-journal', name: '手账本', imp: 'normal', tags: ['学习'] }]}
+        ]},
+        { id: 'bedroom', name: '主卧', hue: 345, containers: [
+          { id: 'c-stand', name: '床头柜', kind: 'stock', yaw: 90, row: 0.68, emoji: '💊', items: [
+            { id: 'i-bpyao', name: '降压药', imp: 'vital', cons: true, qty: 1, unit: '盒', expiry: 3, note: '每日1次 · 不可断服' },
+            { id: 'i-eye', name: '眼药水', imp: 'normal', cons: true, qty: 1, unit: '瓶', expiry: 210 },
+            { id: 'i-balm', name: '润唇膏', imp: 'normal', tags: ['洗护'] }]},
+          { id: 'c-ward', name: '衣柜·顶层', kind: 'default', yaw: 200, row: 0.48, emoji: '🧥', items: [
+            { id: 'i-quilt', name: '厚被子', imp: 'dormant', tags: ['换季'], note: '冬眠中 · 到期取出晾晒' },
+            { id: 'i-down', name: '换季羽绒服', imp: 'dormant', tags: ['换季'] }]},
+          { id: 'c-bedbox', name: '床底储物箱', kind: 'default', yaw: 315, row: 0.68, emoji: '🧳', items: [
+            { id: 'i-case', name: '行李箱', imp: 'dormant', tags: ['出行'], owner: 'private' },
+            { id: 'i-bag', name: '暖水袋', imp: 'dormant', tags: ['换季'] }]}
+        ]},
+        { id: 'kids', name: '儿童房', hue: 48, containers: [
+          { id: 'c-toy', name: '玩具收纳箱', kind: 'kids', yaw: 70, row: 0.68, emoji: '🧸', items: [
+            { id: 'i-blocks', name: '积木桶', imp: 'daily', tags: ['玩具'], emoji: '🧱' },
+            { id: 'i-car', name: '玩具车', imp: 'daily', tags: ['玩具'], emoji: '🚗' },
+            { id: 'i-puzzle', name: '拼图', imp: 'normal', tags: ['玩具'], emoji: '🧩' }]},
+          { id: 'c-pbook', name: '绘本架', kind: 'kids', yaw: 190, row: 0.56, emoji: '📖', items: [
+            { id: 'i-pbooks', name: '绘本一摞', imp: 'normal', tags: ['学习'], emoji: '📚' },
+            { id: 'i-crayon', name: '蜡笔盒', imp: 'normal', cons: true, qty: 1, unit: '盒', emoji: '🖍️' }]}
+        ]},
+        { id: 'kitchen', name: '厨房', hue: 130, containers: [
+          { id: 'c-cond', name: '调料架', kind: 'stock', yaw: 55, row: 0.48, emoji: '🧂', items: [
+            { id: 'i-sauce', name: '生抽', imp: 'normal', cons: true, qty: 1, unit: '瓶', expiry: 90 },
+            { id: 'i-sugar', name: '白糖', imp: 'normal', cons: true, qty: 5, unit: '袋' },
+            { id: 'i-oyster', name: '蚝油', imp: 'normal', cons: true, qty: 1, unit: '瓶', expiry: 30 }]},
+          { id: 'c-rice', name: '米面柜', kind: 'stock', yaw: 165, row: 0.56, emoji: '🌾', items: [
+            { id: 'i-rice', name: '大米', imp: 'normal', cons: true, qty: 2, unit: 'kg' },
+            { id: 'i-noodle', name: '挂面', imp: 'normal', cons: true, qty: 3, unit: '包' }]},
+          { id: 'c-fridge', name: '冰箱·门格', kind: 'stock', yaw: 285, row: 0.52, emoji: '🧊', items: [
+            { id: 'i-yogurt', name: '酸奶', imp: 'normal', cons: true, qty: 2, unit: '排', expiry: 1 },
+            { id: 'i-egg', name: '鸡蛋', imp: 'normal', cons: true, qty: 6, unit: '枚' }]}
+        ]}
+      ]},
+      { id: 'office', name: '办公室', emoji: '💼', rooms: [
+        { id: 'office-desk', name: '办公室·工位', hue: 262, containers: [
+          { id: 'c-drawer-o', name: '工位抽屉', kind: 'default', yaw: 80, row: 0.68, emoji: '🗄️', items: [
+            { id: 'i-kb', name: '备用键盘', imp: 'normal', tags: ['办公'], owner: 'shared' },
+            { id: 'i-ocable', name: '办公充电线', imp: 'daily', tags: ['电子', '充电'] },
+            { id: 'i-obadge', name: '门禁卡(办公)', imp: 'daily', tags: ['卡片'], owner: 'private' }]},
+          { id: 'c-snack', name: '零食柜', kind: 'stock', yaw: 200, row: 0.56, emoji: '🍪', items: [
+            { id: 'i-coffee', name: '挂耳咖啡', imp: 'normal', cons: true, qty: 6, unit: '袋' },
+            { id: 'i-biscuit', name: '苏打饼干', imp: 'normal', cons: true, qty: 2, unit: '盒' }]}
+        ]}
+      ]},
+      { id: 'parents', name: '父母家', emoji: '🏡', rooms: [] }
+    ]
+  };
+}
+function loadDemo(){
+  db = demoData();
+  save();
+}
 /* 新手引导任务打点：room/cont/item/search 由各操作完成时调用 */
 function markTask(k){
   if (!db.guide) db.guide = { seen: false, tasks: {} };
@@ -408,7 +550,7 @@ function clearBasket(){ db.shopping = {}; }
 module.exports = {
   IMP: IMP, IMPRANK: IMPRANK, KINDLABEL: KINDLABEL, OWNLBL: OWNLBL, SYN: SYN,
   get db(){ return db; },
-  load: load, save: save, wipe: wipe, markTask: markTask,
+  load: load, save: save, wipe: wipe, loadDemo: loadDemo, markTask: markTask,
   currentMember: currentMember, setCurrentUser: setCurrentUser, memberName: memberName,
   aiGuideModal: aiGuideModal,
   uid: uid, today: today, fmtDate: fmtDate,
